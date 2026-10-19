@@ -10,45 +10,12 @@ export const lostStyles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'bold',
     color: '#0F172A',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 13,
+    color: '#64748B',
     marginBottom: 12,
-  },
-  formCard: {
-    backgroundColor: '#FFFFFF',
-    padding: 14,
-    borderRadius: 12,
-    marginBottom: 16,
-    elevation: 3, // Shadow Android
-    shadowColor: '#000', // Shadow iOS
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  formTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#1E293B',
-    marginBottom: 10,
-  },
-  input: {
-    backgroundColor: '#F1F5F9',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 10,
-    fontSize: 14,
-    color: '#334155',
-  },
-  buttonSubmit: {
-    backgroundColor: '#2563EB',
-    paddingVertical: 10,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 4,
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontWeight: 'bold',
-    fontSize: 14,
   },
   card: {
     backgroundColor: '#FFFFFF',
@@ -57,6 +24,11 @@ export const lostStyles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: '#E2E8F0',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -82,16 +54,35 @@ export const lostStyles = StyleSheet.create({
   itemDesc: {
     fontSize: 13,
     color: '#475569',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   infoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginTop: 2,
+    gap: 6,
+    marginTop: 4,
   },
   infoText: {
     fontSize: 12,
     color: '#64748B',
+  },
+  detailButton: {
+    backgroundColor: '#2563EB', // Warna biru untuk Lost
+    paddingVertical: 8,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  detailButtonText: {
+    color: '#FFFFFF',
+    fontWeight: 'bold',
+    fontSize: 13,
+  },
+  backButton: {
+    backgroundColor: '#64748B',
+    paddingVertical: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 16,
   },
 });
