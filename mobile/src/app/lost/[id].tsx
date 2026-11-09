@@ -1,50 +1,83 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Pressable } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons';
-import { LostItem } from '../../types/lost';
-import { lostStyles } from '../../styles/lostStyles';
-
-const DUMMY_LOST_DETAIL: Record<string, LostItem> = {
-  '201': {
-    id: '201',
-    title: 'Kunci Motor Honda',
-    description: 'Hilang sekitar area Kantin Barat / GKB 3. Ada gantungannya warna biru berbentuk dompet STNK.',
-    location: 'GKB 3 UMM',
-    date: '19 Okt 2026',
-    contact: '081234567890',
-    status: 'Proses Dicari',
-  },
-  '202': {
-    id: '202',
-    title: 'KTM atas nama Ahmad',
-    description: 'Kartu Tanda Mahasiswa Informatika angkatan 2024 terlepas dari dompet. Sudah diserahkan ke satpam perpustakaan.',
-    location: 'Perpustakaan Pusat',
-    date: '18 Okt 2026',
-    contact: '089876543210',
-    status: 'Selesai',
-  },
-};
+import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
+import { fetchLostItemById } from "../../services/lostService";
+import { lostStyles } from "../../styles/lostStyles";
+import { LostItem } from "../../types/lost";
 
 export default function LostDetailScreen() {
   const router = useRouter();
-
-  // 1. Menerapkan useLocalSearchParams (Dynamic Route Modul 2)
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  // 2. Menerapkan useState & useEffect
   const [detail, setDetail] = useState<LostItem | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
-    if (id && DUMMY_LOST_DETAIL[id]) {
-      setDetail(DUMMY_LOST_DETAIL[id]);
-    }
+    if (!id) return;
+
+    setLoading(true);
+    setErrorMessage("");
+
+    fetchLostItemById(id)
+      .then((data: LostItem) => {
+        setDetail(data);
+      })
+      .catch((error: any) => {
+        setErrorMessage(error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [id]);
 
-  if (!detail) {
+  if (loading) {
     return (
-      <View style={lostStyles.container}>
-        <Text>Laporan barang hilang tidak ditemukan.</Text>
+      <View
+        style={[
+          lostStyles.container,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <ActivityIndicator size="large" color="#2563EB" />
+        <Text style={{ marginTop: 12, color: "#64748B", fontSize: 13 }}>
+          Memuat data dari server...
+        </Text>
+      </View>
+    );
+  }
+
+  if (errorMessage || !detail) {
+    return (
+      <View
+        style={[
+          lostStyles.container,
+          { justifyContent: "center", alignItems: "center", padding: 20 },
+        ]}
+      >
+        <Ionicons
+          name="alert-circle-outline"
+          size={48}
+          color="#EF4444"
+          style={{ marginBottom: 12 }}
+        />
+        <Text
+          style={{
+            color: "#EF4444",
+            marginBottom: 16,
+            fontWeight: "bold",
+            textAlign: "center",
+          }}
+        >
+          {errorMessage || "Laporan barang hilang tidak ditemukan."}
+        </Text>
+        <Pressable
+          style={[lostStyles.backButton, { width: "100%" }]}
+          onPress={() => router.back()}
+        >
+          <Text style={lostStyles.detailButtonText}>Kembali ke Daftar</Text>
+        </Pressable>
       </View>
     );
   }
@@ -58,7 +91,9 @@ export default function LostDetailScreen() {
 
         <View style={lostStyles.infoRow}>
           <Ionicons name="location-outline" size={16} color="#64748B" />
-          <Text style={lostStyles.infoText}>Lokasi Terakhir: {detail.location}</Text>
+          <Text style={lostStyles.infoText}>
+            Lokasi Terakhir: {detail.location}
+          </Text>
         </View>
 
         <View style={lostStyles.infoRow}>
@@ -68,11 +103,12 @@ export default function LostDetailScreen() {
 
         <View style={lostStyles.infoRow}>
           <Ionicons name="call-outline" size={16} color="#64748B" />
-          <Text style={lostStyles.infoText}>Kontak Pelapor: {detail.contact}</Text>
+          <Text style={lostStyles.infoText}>
+            Kontak Pelapor: {detail.contact}
+          </Text>
         </View>
       </View>
 
-      {/* 3. Menerapkan router.back() (Kriteria Modul 2) */}
       <Pressable style={lostStyles.backButton} onPress={() => router.back()}>
         <Text style={lostStyles.detailButtonText}>Kembali ke Daftar</Text>
       </Pressable>
